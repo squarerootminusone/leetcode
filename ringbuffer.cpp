@@ -6,6 +6,8 @@ using Event = int;
 template<typename T, std::size_t Capacity>
 class ring_buffer {
 public:
+    ring_buffer(): buffer_(std::make_unique<T[]>(Capacity)) {}
+
     bool push(const T& obj) {
         const std::size_t tail = tail_.load(std::memory_order_relaxed); // regular read
         const std::size_t head = head_.load(std::memory_order_acquire); // make sure pop executes after
@@ -37,6 +39,7 @@ private:
     // masking prevents head/tail wrapping
     static constexpr std::size_t mask_ = Capacity - 1;
 
+    // or alignas(std::hardware_constructive_interference_size)
     alignas(64) std::atomic<std::size_t> head_{0}; // where reader is
     alignas(64) std::atomic<std::size_t> tail_{0}; // where writer is
     alignas(64) std::unique_ptr<T[]> buffer_;
