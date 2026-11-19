@@ -28,7 +28,6 @@ public:
             else {
                 int empty = maxWidth - len;
                 int stride = empty / splits;
-                cout << empty << ", " << stride << endl;
 
                 for (int i = lhs; i < rhs; i++)
                     s += words[i] + string(stride + (int)(stride * splits + (i - lhs + 1) <= empty), ' ');
